@@ -61,7 +61,7 @@ class Post(models.Model):
         self.save()
 
     def preview(self):
-        return self.text[:124] + '...' if len(self.text) > 124 else self.text
+        return self.text[0:124] + '...'
 
 
 class PostCategory(models.Model):
