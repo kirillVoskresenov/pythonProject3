@@ -3,15 +3,14 @@
 {% load custom_filters %}
 
 {% block title %}
-News
+Новости
 {% endblock title %}
 
 {% block content %}
    <h1>Все статьи</h1>
     <h2> Количество статей:</h2>
-   <h3>{{ news|length }}</h3>
    <hr>
-   {% if news %}
+   {% if post %}
        <table>
            <tr>
                <td>Название статьи</td>
@@ -22,8 +21,8 @@ News
            {% for post in news %}
            <tr>
                <td>{{ post.title }}</td>
-               <td>{{ post.post_time|date:'M d Y' }}</td>
-               <td>{{ post.content|truncatewords:20|censor }}</td>
+               <td>{{ post.article_date|date:'M d Y' }}</td>
+               <td>{{ post.text|truncatewords:20|censor }}</td>
            </tr>
            {% endfor %}
 

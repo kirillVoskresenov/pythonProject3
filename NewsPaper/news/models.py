@@ -1,20 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum
 from django.urls import reverse
 from datetime import datetime
-
-news = 'NE'
-article = 'AR'
-
-Types = [
-    (news, 'новость'),
-    (article, 'статья')]
 
 
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     rating = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.user.title()
 
     def update_rating(self):
         posts_rating = 0
@@ -42,15 +37,28 @@ class Author(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
+    def __str__(self):
+        return self.name.title()
+
 
 class Post(models.Model):
+    news = 'NE'
+    article = 'AR'
+
+    Types = [
+        (news, 'новость'),
+        (article, 'статья')]
+
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    choice = models.CharField(max_length=10, choices=Types)
+    post_type = models.CharField(max_length=15, choices=Types, default=None)
     title = models.CharField(max_length=255)
     article_date = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField(Category, through="PostCategory")
     text = models.TextField()
     rating = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.title
 
     def like(self):
         self.rating += 1
@@ -70,12 +78,14 @@ class PostCategory(models.Model):
 
 
 class Comment(models.Model):
-    objects = None
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     time_in = models.DateTimeField(auto_now_add=True)
     rating = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.text
 
     def like(self):
         self.rating += 1

@@ -1,5 +1,4 @@
 from django.views.generic import ListView, DetailView
-
 from .models import Post
 
 
@@ -12,5 +11,5 @@ class PostsList(ListView):
 
 class PostDetail(DetailView):
     model = Post
-    template_name = 'new.html'
-    context_object_name = 'new'
+    template_name = 'news_detail.html'
+    context_object_name = 'news_detail'
