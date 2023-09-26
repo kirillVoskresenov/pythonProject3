@@ -3,19 +3,20 @@
 {% load custom_filters %}
 
 {% block title %}
-Новости
+news
 {% endblock title %}
 
 {% block content %}
    <h1>Все статьи</h1>
-    <h2> Количество статей:</h2>
+    <h3> Количество статей:</h3>
+   <h3>{{ news|length }}</h3>
    <hr>
-   {% if post %}
+   {% if news %}
        <table>
            <tr>
-               <td>Название статьи</td>
-               <td>Дата публикации</td>
-               <td>Описание</td>
+               <td> <h3><strong>Название статьи&nbsp;&nbsp;&nbsp;&nbsp;</strong></h3> </td>
+               <td> <h3><strong>Дата публикации</strong></h3> </td>
+               <td> <h3><strong>Описание</strong></h3> </td>
            </tr>
 
            {% for post in news %}

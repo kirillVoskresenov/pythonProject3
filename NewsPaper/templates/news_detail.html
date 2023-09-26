@@ -1,4 +1,5 @@
 {% extends 'flatpages/default.html' %}
+
 {% load custom_filters %}
 
 {% block title %}
@@ -9,17 +10,18 @@ news_detail
    <h1>{{ news_detail.title|censor }}</h1>
 
    <hr>
- {% if news_detail%}
+ {% if news_detail %}
        <table>
            <tr>
-               <td>Дата публикации</td>
-               <td>Текст статьи</td>
+               <td> <h4><strong>Заголовок&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></h4> </td>
+               <td> <h4><strong>Дата публикации&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></h4> </td>
+               <td> <h4><strong>Текст статьи&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></h4> </td>
            </tr>
 
            <tr>
-               <td>{{ news_detail.title|censor}}</td>
-               <td>{{ news_detail.article_date|date:'M d Y' }}</td>
-               <td>{{ news_detail.text|censor }}</td>
+               <td> {{ news_detail.title }} </td>
+               <td> {{ news_detail.article_date|date:'M d Y' }} </td>
+               <td> {{ news_detail.text|censor }} </td>
            </tr>
        </table>
 {% else %}

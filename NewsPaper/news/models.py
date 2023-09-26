@@ -9,7 +9,7 @@ class Author(models.Model):
     rating = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.user.title()
+        return self.user.username.title()
 
     def update_rating(self):
         posts_rating = 0
@@ -58,7 +58,7 @@ class Post(models.Model):
     rating = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.title
+        return f'{self.title.title()}: {self.text[:20]}'
 
     def like(self):
         self.rating += 1
