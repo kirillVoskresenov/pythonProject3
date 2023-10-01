@@ -1,0 +1,74 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block title %}
+search
+{% endblock title %}
+
+{% block content %}
+
+    <label for="start">Start date:</label>
+
+    <input type="date" id="start" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
+
+    <h3>{{ time_now|date:'d M Y' }}</h3>
+    <h1>Все новости</h1>
+
+    <form action="" method="get">
+    {{ filterset.form.as_p }}
+
+    <input type="submit" value="Найти"/>
+    </form>
+
+
+    {% if news %}
+       <table>
+           <tr>
+               <td>Заголовок</td>
+               <td>Дата публикации</td>
+               <td>Текст</td>
+               <td>Тип поста</td>
+               <td>ID поста</td>
+               <td>Автор</td>
+           </tr>
+
+           {% for new in news %}
+           <tr>
+
+               <td>{{ post.author }}&emsp;</td>
+               <td>{{ post.title|censor }}&emsp;</td>
+               <td>{{ post.article date|date:'d M Y, H m'|censor}}&emsp;</td>
+               <td>{{ post.text|truncatechars:20|censor }}&emsp;</td>
+               <td>{{ post.post_type }}&emsp;</td>
+
+
+           </tr>
+           {% endfor %}
+
+       </table>
+    {% else %}
+       <!-- Если новостей нет, говорим, что новостей нет ;) -->
+       <h2>Новостей нет!</h2>
+
+    {% endif %}
+    {% if page_obj.has_previous %}
+       {# Для каждой ссылки пагинации указываем обработку через новый тег #}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+{% endblock content %}
