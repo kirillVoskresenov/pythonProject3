@@ -57,6 +57,10 @@ class Post(models.Model):
     text = models.TextField()
     rating = models.IntegerField(default=0)
 
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
+
+
     def __str__(self):
         return f'{self.title.title()}: {self.text[:20]}'
 

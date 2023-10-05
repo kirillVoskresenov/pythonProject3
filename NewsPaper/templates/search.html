@@ -8,50 +8,38 @@ search
 
 {% block content %}
 
-    <label for="start">Start date:</label>
-
-    <input type="date" id="start" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
-
-    <h3>{{ time_now|date:'d M Y' }}</h3>
     <h1>Все новости</h1>
 
     <form action="" method="get">
-    {{ filterset.form.as_p }}
+        {{ filterset.form.as_p }}
+        <input type="submit" value="Найти"/>
 
-    <input type="submit" value="Найти"/>
     </form>
 
 
-    {% if news %}
+    {% if search %}
        <table>
            <tr>
+               <td>Автор</td>
                <td>Заголовок</td>
                <td>Дата публикации</td>
-               <td>Текст</td>
-               <td>Тип поста</td>
-               <td>ID поста</td>
-               <td>Автор</td>
            </tr>
 
-           {% for new in news %}
+           {% for post in search %}
            <tr>
-
                <td>{{ post.author }}&emsp;</td>
                <td>{{ post.title|censor }}&emsp;</td>
-               <td>{{ post.article date|date:'d M Y, H m'|censor}}&emsp;</td>
-               <td>{{ post.text|truncatechars:20|censor }}&emsp;</td>
-               <td>{{ post.post_type }}&emsp;</td>
-
-
+               <td>{{ post.article_date|date:'d M Y'|censor}}&emsp;</td>
            </tr>
            {% endfor %}
 
        </table>
     {% else %}
-       <!-- Если новостей нет, говорим, что новостей нет ;) -->
+
        <h2>Новостей нет!</h2>
 
     {% endif %}
+
     {% if page_obj.has_previous %}
        {# Для каждой ссылки пагинации указываем обработку через новый тег #}
        <a href="?{% url_replace page=1 %}">1</a>

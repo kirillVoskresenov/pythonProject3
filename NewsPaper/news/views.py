@@ -1,11 +1,14 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView,\
+    UpdateView, DeleteView
 from .models import Post
-from .filters import PostsFilter
+from .filters import PostFilter
+from django.urls import reverse_lazy
+from .forms import PostsForm
 
 
 class PostsList(ListView):
     model = Post
-    ordering = 'title'
+    ordering = '-article_date'
     template_name = 'news.html'
     context_object_name = 'news'
     paginate_by = 10
@@ -18,7 +21,7 @@ class PostsList(ListView):
         # в этом юните ранее.
         # Сохраняем нашу фильтрацию в объекте класса,
         # чтобы потом добавить в контекст и использовать в шаблоне.
-        self.filterset = PostsFilter(self.request.GET, queryset)
+        self.filterset = PostFilter(self.request.GET, queryset)
         # Возвращаем из функции отфильтрованный список товаров
         return self.filterset.qs
 
@@ -28,15 +31,15 @@ class PostsList(ListView):
         context['filterset'] = self.filterset
         return context
 
-class PostsSearch(ListView):
+class PostSearch(ListView):
     model = Post
-    template_name = 'flatpages/search.html'
+    template_name = 'search.html'
     queryset = Post.objects.order_by('-article_date')
     context_object_name = 'search'
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        self.filterset = PostsFilter(self.request.GET, queryset)
+        self.filterset = PostFilter(self.request.GET, queryset)
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
@@ -49,3 +52,60 @@ class PostDetail(DetailView):
     template_name = 'news_detail.html'
     context_object_name = 'news_detail'
 
+class NewsCreate(CreateView):
+    # Указываем нашу разработанную форму
+    form_class = PostsForm
+    # модель товаров
+    model = Post
+    # и новый шаблон, в котором используется форма.
+    template_name = 'news_edit.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.post_type = 'NE'
+        return super().form_valid(form)
+
+class ArticlesCreate(CreateView):
+    # Указываем нашу разработанную форму
+    form_class = PostsForm
+    # модель товаров
+    model = Post
+    # и новый шаблон, в котором используется форма.
+    template_name = 'articles_edit.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.post_type = 'AR'
+        return super().form_valid(form)
+
+class NewsUpdate(UpdateView):
+    form_class = PostsForm
+    model = Post
+    template_name = 'news_edit.html'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(post_type='NE')
+
+class ArticlesUpdate(UpdateView):
+    form_class = PostsForm
+    model = Post
+    template_name = 'articles_edit.html'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(post_type='AR')
+
+class NewsDelete(DeleteView):
+    model = Post
+    template_name = 'news_delete.html'
+    success_url = reverse_lazy('post_list')
+
+    def get_queryset(self):
+        return super().get_queryset().filter(post_type='NE')
+
+class ArticlesDelete(DeleteView):
+    model = Post
+    template_name = 'articles_delete.html'
+    success_url = reverse_lazy('post_list')
+
+    def get_queryset(self):
+        return super().get_queryset().filter(post_type='AR')
