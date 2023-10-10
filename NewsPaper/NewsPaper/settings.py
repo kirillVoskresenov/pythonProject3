@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'news',
-    'django_filters'
+    'django_filters',
+    'sign',
+    'authorization'
 ]
 
 SITE_ID = 1
@@ -74,6 +76,10 @@ TEMPLATES = [
         },
     },
 ]
+
+LOGIN_URL = '/sigh/login/'
+LOGIN_REDIRECT_URL = '/'
+
 WSGI_APPLICATION = 'NewsPaper.wsgi.application'
 
 
@@ -128,4 +134,5 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 

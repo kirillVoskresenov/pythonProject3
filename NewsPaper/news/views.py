@@ -4,6 +4,7 @@ from .models import Post
 from .filters import PostFilter
 from django.urls import reverse_lazy
 from .forms import PostsForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class PostsList(ListView):
@@ -78,7 +79,7 @@ class ArticlesCreate(CreateView):
         post.post_type = 'AR'
         return super().form_valid(form)
 
-class NewsUpdate(UpdateView):
+class NewsUpdate(LoginRequiredMixin,UpdateView):
     form_class = PostsForm
     model = Post
     template_name = 'news_edit.html'
@@ -86,7 +87,7 @@ class NewsUpdate(UpdateView):
     def get_queryset(self):
         return super().get_queryset().filter(post_type='NE')
 
-class ArticlesUpdate(UpdateView):
+class ArticlesUpdate(LoginRequiredMixin,UpdateView):
     form_class = PostsForm
     model = Post
     template_name = 'articles_edit.html'
