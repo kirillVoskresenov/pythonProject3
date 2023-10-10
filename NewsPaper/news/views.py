@@ -4,7 +4,9 @@ from .models import Post
 from .filters import PostFilter
 from django.urls import reverse_lazy
 from .forms import PostsForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views.generic.edit import CreateView
+
 
 
 class PostsList(ListView):
@@ -53,44 +55,48 @@ class PostDetail(DetailView):
     template_name = 'news_detail.html'
     context_object_name = 'news_detail'
 
-class NewsCreate(CreateView):
+class NewsCreate(PermissionRequiredMixin,LoginRequiredMixin,CreateView):
     # Указываем нашу разработанную форму
     form_class = PostsForm
     # модель товаров
     model = Post
     # и новый шаблон, в котором используется форма.
     template_name = 'news_edit.html'
+    permission_required = ('news.create_post')
 
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type = 'NE'
         return super().form_valid(form)
 
-class ArticlesCreate(CreateView):
+class ArticlesCreate(PermissionRequiredMixin,LoginRequiredMixin,CreateView):
     # Указываем нашу разработанную форму
     form_class = PostsForm
     # модель товаров
     model = Post
     # и новый шаблон, в котором используется форма.
     template_name = 'articles_edit.html'
+    permission_required = ('news.create_post')
 
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type = 'AR'
         return super().form_valid(form)
 
-class NewsUpdate(LoginRequiredMixin,UpdateView):
+class NewsUpdate(PermissionRequiredMixin,LoginRequiredMixin,UpdateView):
     form_class = PostsForm
     model = Post
     template_name = 'news_edit.html'
+    permission_required = ('news.update_post')
 
     def get_queryset(self):
         return super().get_queryset().filter(post_type='NE')
 
-class ArticlesUpdate(LoginRequiredMixin,UpdateView):
+class ArticlesUpdate(PermissionRequiredMixin,LoginRequiredMixin,UpdateView):
     form_class = PostsForm
     model = Post
     template_name = 'articles_edit.html'
+    permission_required = ('news.update_post')
 
     def get_queryset(self):
         return super().get_queryset().filter(post_type='AR')
