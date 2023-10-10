@@ -104,7 +104,7 @@ class ArticlesUpdate(PermissionRequiredMixin,LoginRequiredMixin,UpdateView):
 class NewsDelete(DeleteView):
     model = Post
     template_name = 'news_delete.html'
-    success_url = reverse_lazy('post_list')
+    success_url = reverse_lazy('news')
 
     def get_queryset(self):
         return super().get_queryset().filter(post_type='NE')
@@ -112,7 +112,7 @@ class NewsDelete(DeleteView):
 class ArticlesDelete(DeleteView):
     model = Post
     template_name = 'articles_delete.html'
-    success_url = reverse_lazy('post_list')
+    success_url = reverse_lazy('news')
 
     def get_queryset(self):
         return super().get_queryset().filter(post_type='AR')
